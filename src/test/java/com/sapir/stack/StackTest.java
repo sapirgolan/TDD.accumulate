@@ -4,6 +4,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -13,14 +20,19 @@ import static org.junit.Assert.assertThat;
  */
 public class StackTest {
 
-    private Stack stack;
-
     @Rule
     public ExpectedException expected = ExpectedException.none();
+
+    @InjectMocks
+    private Stack stack;
+
+    @Mock
+    List<Integer> mockedList;
 
     @Before
     public void setUp() throws Exception {
         stack = new Stack(10);
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
