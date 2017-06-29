@@ -1,5 +1,8 @@
 package com.sapir.stack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by i062070 on 28/06/2017.
  */
@@ -7,11 +10,11 @@ public class Stack {
 
     private final int MAX_CAPACITY;
     private int size;
-    private int[] values;
+    private List<Integer> values;
 
     public Stack(int size) {
         MAX_CAPACITY = size;
-        values = new int[MAX_CAPACITY];
+        values = new ArrayList<Integer>(MAX_CAPACITY);
     }
 
     public boolean isEmpty() {
@@ -21,13 +24,14 @@ public class Stack {
     public void push(int value) throws OverFlowException {
         if (size == MAX_CAPACITY)
             throw new OverFlowException();
-        values[size++] = value;
+        size++;
+        values.add(value);
     }
 
     public int pop() throws Exception {
         if (isEmpty())
             throw new UnderFlowException();
-        return values[--size];
+        return values.get(--size);
     }
 
 
