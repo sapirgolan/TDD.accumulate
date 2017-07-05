@@ -6,20 +6,22 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by i062070 on 28/06/2017.
  */
 public class StackTest {
 
+    public static final int STACK_SIZE = 10;
     @Rule
     public ExpectedException expected = ExpectedException.none();
 
@@ -27,12 +29,13 @@ public class StackTest {
     private Stack stack;
 
     @Mock
-    List<Integer> mockedList;
+    private List<Integer> values;
 
     @Before
     public void setUp() throws Exception {
-        stack = new Stack(10);
+        stack = Mockito.spy(new Stack(STACK_SIZE));
         MockitoAnnotations.initMocks(this);
+        when(values.get(Mockito.anyInt())).thenReturn(7);
     }
 
     @Test
@@ -69,6 +72,7 @@ public class StackTest {
     @Test
     public void pushX_popX() throws Exception {
         stack.push(5);
+        when(values.get(Mockito.anyInt())).thenReturn(5);
         assertThat(stack.pop(), is(5));
     }
 
@@ -76,15 +80,30 @@ public class StackTest {
     public void pushXandY_popYandX() throws Exception {
         stack.push(4);
         stack.push(5);
+        when(values.get(Mockito.anyInt()))
+                .thenReturn(5,4);
         assertThat(stack.pop(), is(5));
         assertThat(stack.pop(), is(4));
+        Mockito.verify(values, Mockito.times(2))
+                .add(Mockito.anyInt());
     }
 
     @Test
     public void pushMoreThanSize_throwOverFlowException() throws Exception {
         expected.expect(OverFlowException.class);
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < (STACK_SIZE + 1); i++) {
             stack.push(i);
         }
+    }
+
+    @Test
+    public void pushItemsTillStackIsFull() throws Exception {
+        for (int i = 0; i < (STACK_SIZE); i++) {
+            stack.push(i);
+        }
+        assertThat(Whitebox.<Integer>invokeMethod(stack, "getSize"),
+                is(10));
+        Mockito.verify(stack, Mockito.times(10))
+                .push(Mockito.anyInt());
     }
 }

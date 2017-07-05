@@ -1,6 +1,5 @@
 package com.sapir.stack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +13,6 @@ public class Stack {
 
     public Stack(int size) {
         MAX_CAPACITY = size;
-        values = new ArrayList<Integer>(MAX_CAPACITY);
     }
 
     public boolean isEmpty() {
@@ -32,6 +30,10 @@ public class Stack {
         if (isEmpty())
             throw new UnderFlowException();
         return values.get(--size);
+    }
+
+    private int getSize() {
+        return size;
     }
 
 
